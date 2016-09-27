@@ -72,6 +72,7 @@
   field_event_image: aa51e54a-dee0-11e5-b86d-9a79f06e9478
   field_event_location: Springfield High School
   group: d6e377d0-32d8-11e6-ac61-9e71128cae77
+  field_content_visibility: community
 3a2c6f6a-deef-11e5-b86d-9a79f06e9478:
   uuid: 3a2c6f6a-deef-11e5-b86d-9a79f06e9478
   title: Finding the new way
@@ -122,8 +123,8 @@
   field_event_date_end: +6 day|23:59
   field_event_image: c08ba2c2-3adb-11e6-ac61-9e71128cae77
   field_event_location: That bar there
-  field_content_visibility: public
   group: d6e377d0-32d8-11e6-ac61-9e71128cae77
+  field_content_visibility: community
 3a2c73de-deef-11e5-b86d-9a79f06e9478:
   uuid: 3a2c73de-deef-11e5-b86d-9a79f06e9478
   title: Second Hand Market
@@ -146,7 +147,6 @@
   field_event_image: aa51f774-dee0-11e5-b86d-9a79f06e9478
   field_event_location: Utopia Experience
   field_content_visibility: public
-
 3a2c758c-deef-11e5-b86d-9a79f06e9478:
   uuid: 3a2c758c-deef-11e5-b86d-9a79f06e9478
   title: Open Social Beta Launch party
