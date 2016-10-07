@@ -5,6 +5,10 @@ addons:
    # ...
    paths:
      - $(git ls-files -o | grep travis_artifacts | tr "\n" ":")
+  sauce_connect:
+    username: opensocial
+  jwt:
+    secure: MFvJTCAN9wZQq15klSGVoB7A/uLM9qIqY2kAIon2B8Zqn2fdOa1u2PAqe859yHpD8PeAH3AWTnWpUoGe12Hl8XeetkESwXC6YJ19yM0xKTQSl9ZxnKa3Wz+OapHQA1PrCWlnc2AD6HLvlH8f2uoWzDk3wggOpUOVKPU3W0We78e9/krCgEIGI5cMrcEvDA4AcO/cEnRxgFwupLxFdiAIHAx99FyDI/yxFU8D8PvWWXHhpAljoUAM1LUj0jQTWzHtXZT26x9nmYdILpI7zKhIxfbsC5Dtxj8qznPCCoNmf1WvLmoaEQ0/kfIajLXEpLkNZpOsnjQSyf6ptwoZ82712/PKes6xDyyVPimFSzQ8IFYTSRzHM0Blgbp3rZL4FYJfdtzzE18CmxSIRiW9AT1S5/ZEGFYrr36zA4z92Sb71XaP6UKjo8VSXPRCnLeEtNASHLYBWKyEP/N3XhIJTN7KQRVUreziob+aXKxdMv8w5nsurNfi/LM/fiPIEMfICXrq/6JJ4BsqgfDIeKWEZbyDLwo9lnK0NcykazY3bhOgDZ/343bP/TJJ+LsKd+jNv1NAxmjxd3IrbgQV4jJZ5n/c7kNFxO2aco+zWao33Z9vcLuphg860jiCyCPfslj96Zj8xgxPNfK14+dpS09s7zC/FwzI0qhWxvlEFajarLrULmQ=
 
 language: php
 
