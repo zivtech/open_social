@@ -36,9 +36,13 @@ install:
   - composer require goalgorilla/open_social:dev-${BRANCH}#${TRAVIS_COMMIT}
   - cd html
   - ./../vendor/bin/drush -y site-install social --db-url=mysql://root@localhost/social --account-pass=admin install_configure_form.update_status_module='array(FALSE,FALSE)';
+#  - ./../vendor/bin/drush pm-enable social_demo -y
+#  - ./../vendor/bin/drush sda file user group topic event eventenrollment post comment
+#  - ./../vendor/bin/drush pm-disable social_demo -y
+#  - ./../vendor/bin/drush core-cron
 
 before_script:
-  - cd install/html
+  - ls -lah
   - ./../vendor/bin/drush runserver --default-server=builtin 8080 &>/dev/null &
   - phantomjs --webdriver=4444 > /dev/null &
 
