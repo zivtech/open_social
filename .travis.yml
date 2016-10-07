@@ -47,5 +47,5 @@ before_script:
   - phantomjs --webdriver=4444 > /dev/null &
 
 script:
-  - curl http://127.0.0.1:8080
-  - vendor/bin/behat --config=profiles/contrib/social/tests/behat/config/behat.yml --tags "stability"
+  - curl http://localhost:8080
+  - ./../vendor/bin/behat --config=profiles/contrib/social/tests/behat/config/behat.yml --tags "stability"
