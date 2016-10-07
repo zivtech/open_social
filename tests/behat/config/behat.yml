@@ -1,6 +1,6 @@
 default:
   autoload:
-    '': /root/behat/features/bootstrap
+    '': %paths.base%/behat/features/bootstrap
   suites:
     default:
       parameters:
@@ -10,8 +10,8 @@ default:
             password: 'admin'
             mail: 'info+admin@example.com'
       paths:
-        features: '/root/behat/features'
-        bootstrap: '/root/behat/features/bootstrap'
+        features: %paths.base%/behat/features
+        bootstrap: %paths.base%/behat/features/bootstrap
       contexts:
         - FeatureContext
         - SocialDrupalContext
@@ -20,24 +20,15 @@ default:
         - PostContext
   extensions:
       Behat\MinkExtension:
-#        default_session: 'selenium2'
-        default_session: saucelabs
-        javascript_session: saucelabs
-        saucelabs:
-            browser: "firefox"
-            capabilities:
-                platform: "Windows 7"
-                version: 26
-        base_url: 'http://web/'
-        files_path: '/root/files/'
+        default_session: 'selenium2'
+        base_url: 'http://127.0.0.1:8080'
+#        files_path: '/root/files/'
         goutte: ~
-#        selenium2:
-#          wd_host: 'http://selenium:4444/wd/hub/'
-#          browser: 'firefox'
+        selenium2: ~
       Drupal\DrupalExtension:
         api_driver: 'drupal'
         drupal:
-          drupal_root: '/var/www/html'
+          drupal_root: '../../../../../'
         selectors:
           message_selector: '.alert'
           error_message_selector: '.alert.alert-danger'

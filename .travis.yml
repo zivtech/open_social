@@ -10,26 +10,23 @@ addons:
   jwt:
     secure: MFvJTCAN9wZQq15klSGVoB7A/uLM9qIqY2kAIon2B8Zqn2fdOa1u2PAqe859yHpD8PeAH3AWTnWpUoGe12Hl8XeetkESwXC6YJ19yM0xKTQSl9ZxnKa3Wz+OapHQA1PrCWlnc2AD6HLvlH8f2uoWzDk3wggOpUOVKPU3W0We78e9/krCgEIGI5cMrcEvDA4AcO/cEnRxgFwupLxFdiAIHAx99FyDI/yxFU8D8PvWWXHhpAljoUAM1LUj0jQTWzHtXZT26x9nmYdILpI7zKhIxfbsC5Dtxj8qznPCCoNmf1WvLmoaEQ0/kfIajLXEpLkNZpOsnjQSyf6ptwoZ82712/PKes6xDyyVPimFSzQ8IFYTSRzHM0Blgbp3rZL4FYJfdtzzE18CmxSIRiW9AT1S5/ZEGFYrr36zA4z92Sb71XaP6UKjo8VSXPRCnLeEtNASHLYBWKyEP/N3XhIJTN7KQRVUreziob+aXKxdMv8w5nsurNfi/LM/fiPIEMfICXrq/6JJ4BsqgfDIeKWEZbyDLwo9lnK0NcykazY3bhOgDZ/343bP/TJJ+LsKd+jNv1NAxmjxd3IrbgQV4jJZ5n/c7kNFxO2aco+zWao33Z9vcLuphg860jiCyCPfslj96Zj8xgxPNfK14+dpS09s7zC/FwzI0qhWxvlEFajarLrULmQ=
 
-language: php
-
-php:
-  - 5.6
-
 env:
   global:
     secure: lzhn0fc9bhgGdWrC+4FdbvK6QpjHsb4UVy0wvghcV7HK4YU0ZpRYm5MD9bSakRviulN+hQMIYddQYVekJKO0gsK4sh5BdL/1tKx5M8DqJcMo1zyK6h0Z12EWKCnRseYc4y1Y0EgwmT3iN4e/fxLJ+qNhB8rm4yiwlgjonHI2146KdZkhUJsXwDfL/cb2hYm5Ky86TC+ii1RfpCOueU5SUU5LuIzrPDt7Gyme4K0NIxr3PjMa0IzufNwOl7qqqWcjlzjTuMeR0mH6N6I1amF5eOuYuwa1Bdg7DUP/Pw0KHJ1SGFHtmoRzSktLO9DNtOYlg0u+Mr2O1lrI3eRFbf7Taokl2fW+4J2Vb38yrg2H6Iq8KuSvRGdmBACZC8n3bpGPc6X9tUx3BU5oK7OnrSvEjo+tBTG3+RKwmh+y+zkXHq8PYD21nsS5iMTEuROVmh59W2mRcAAxjn1j/T+vbjv4csv2Y+PRj0zycs8OgjIlt86EfzdYhyHVDj+7dNQT6FPId81NvJXEyCpa8YUBLIT1lT8O6VTTWs/cEy7q+Zm8dEaxqE9wkgV8shnG7fBvPThcmKMnE0JsbEYlDv/8JR7SfKbBroTsF0Yw8ZX+Vc6jsLrlfrICShNvzs8eiu96TfC09Qv+6GY54ET8nw6/UBWpi/k6gDVtVuzywl3iF1+8M1A=
 
-services:
-  - docker
+language: php
 
-before_install:
-  # Lets install Docker first.
-  - sudo apt-get clean
-  - sudo apt-get update
-  - sudo apt-get -y -o Dpkg::Options::="--force-confnew" install docker-engine
-  - docker --version
+php:
+  - 7.0
+
+mysql:
+  database: social
+  username: root
+  encoding: utf8
+
+install:
   # Lets set-up our helper repository with all the docker config and use correct version in composer.json.
-  - git clone --branch master https://github.com/goalgorilla/drupal_social.git install
+  - git clone --branch extended-dev https://github.com/goalgorilla/drupal_social.git install
   - cd install
   - phpenv config-rm xdebug.ini
   # Change this back to composer require goalgorilla/open_social dev-8.x-1.x#${TRAVIS_COMMIT} before merge to 8.x-1.x!!!
@@ -37,22 +34,14 @@ before_install:
   - export BRANCH=$(if [ "$TRAVIS_PULL_REQUEST" == "false" ]; then echo $TRAVIS_BRANCH; else echo `curl -s $PR | jq -r .head.ref`; fi)
   - echo "TRAVIS_BRANCH=$TRAVIS_BRANCH, PR=$PR, BRANCH=$BRANCH"
   - composer require goalgorilla/open_social:dev-${BRANCH}#${TRAVIS_COMMIT}
-  # Lets install via docker-compose.
-  - sudo rm /usr/local/bin/docker-compose || true
-  - curl -L https://github.com/docker/compose/releases/download/1.6.2/docker-compose-`uname -s`-`uname -m` > docker-compose
-  - chmod +x docker-compose
-  - sudo mv docker-compose /usr/local/bin
-  - docker-compose --version
-  - docker-compose -f docker-compose-travis.yml up -d
-  - docker ps -a
+  - cd html
+  - ./../vendor/bin/drush -y site-install social --db-url=mysql://root@db:3306/social --account-pass=admin install_configure_form.update_status_module='array(FALSE,FALSE)';
+
+before_script:
+  - cd install/html
+  - ./../vendor/bin/drush runserver --default-server=builtin 8080 &>/dev/null &
+  - phantomjs --webdriver=4444 > /dev/null &
 
 script:
-  - docker exec -i social_web bash /root/dev-scripts/install/install_script.sh
-  - docker exec -i social_web_scripts sh /root/travis/unit-tests.sh
-  - docker ps
-  - docker logs social_selenium
-  - sleep 30
-  - docker exec -it social_behat sh /root/travis/behatstability.sh
-
-after_success:
-  - bash dev-scripts/trigger_dockerhub.sh
+#  - vendor/bin/behat
+  - curl http://127.0.0.1:8080
