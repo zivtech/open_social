@@ -35,7 +35,7 @@ install:
   - echo "TRAVIS_BRANCH=$TRAVIS_BRANCH, PR=$PR, BRANCH=$BRANCH"
   - composer require goalgorilla/open_social:dev-${BRANCH}#${TRAVIS_COMMIT}
   - cd html
-  - ./../vendor/bin/drush -y site-install social --db-url=mysql://root@db:3306/social --account-pass=admin install_configure_form.update_status_module='array(FALSE,FALSE)';
+  - ./../vendor/bin/drush -y site-install social --db-url=mysql://root@localhost/social --account-pass=admin install_configure_form.update_status_module='array(FALSE,FALSE)';
 
 before_script:
   - cd install/html
