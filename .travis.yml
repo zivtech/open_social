@@ -43,9 +43,10 @@ install:
 
 before_script:
   - ls -lah
-  - ./../vendor/bin/drush runserver --default-server=builtin 8080 &>/dev/null &
+  - php -S localhost:8080 &>/dev/null &
   - phantomjs --webdriver=4444 > /dev/null &
+  - sleep 4
 
 script:
-  - curl http://localhost:8080
-  - ./../vendor/bin/behat --config=profiles/contrib/social/tests/behat/config/behat.yml --tags "stability"
+  - curl 'http://localhost:8080'
+  - ./../vendor/bin/behat --config=/home/travis/build/goalgorilla/open_social/install/html/profiles/contrib/social/tests/behat/config/behat.yml --tags "stability"
