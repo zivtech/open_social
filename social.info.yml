@@ -6,11 +6,11 @@ core: '8.x'
 version: '8.x-1.0-beta6'
 
 dependencies:
-  - config
-  - system
-  - user
-  - breakpoint
-  - features
+  # - config
+  # - system
+  # - user
+  # - breakpoint
+  # - features
 themes:
   - bartik
   - seven
