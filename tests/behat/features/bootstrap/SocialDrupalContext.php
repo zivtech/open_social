@@ -5,6 +5,7 @@ use Behat\Mink\Element\Element;
 use Behat\Behat\Hook\Scope\BeforeScenarioScope;
 
 use Behat\Gherkin\Node\TableNode;
+use Symfony\Component\DependencyInjection\Container;
 
 /**
  * Provides pre-built step definitions for interacting with Open Social.
