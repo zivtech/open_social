@@ -137,4 +137,92 @@ class SocialDrupalContext extends DrupalContext {
     $modules = [$module_name];
     \Drupal::service('module_installer')->install($modules);
   }
+
+  /**
+   * Creates entity of a given type provided in the form:
+   * | title    | author     | status | created           |
+   * | My title | Joe Editor | 1      | 2014-10-17 8:00am |
+   * | ...      | ...        | ...    | ...               |
+   *
+   * @Given :type :entity entity:
+   */
+  public function createEntity($type, $entity_name, TableNode $entityTable) {
+    foreach ($entityTable->getHash() as $entityHash) {
+      $entity = (object) $entityHash;
+      $entity->type = $type;
+    }
+    // Throw an exception if the node type is missing or does not exist.
+    if (!isset($entity->type) || !$entity->type) {
+      throw new \Exception("Cannot create content because it is missing the required property 'type'.");
+    }
+    $bundles = \Drupal::entityManager()->getBundleInfo($entity_name);
+    if (!in_array($entity->type, array_keys($bundles))) {
+      throw new \Exception("Cannot create entity because provided entity type '$entity->type' does not exist.");
+    }
+    // Default status to 1 if not set.
+    if (!isset($entity->status)) {
+      $entity->status = 1;
+    }
+    // If 'author' is set, remap it to 'uid'.
+    if (isset($entity->author)) {
+      $user = user_load_by_name($entity->author);
+      if ($user) {
+        $entity->uid = $user->id();
+      }
+    }
+    $this->expandEntityFields($entity_name, $entity);
+    $entity = entity_create($entity_name, (array) $entity);
+    $entity->save();
+  }
+
+  /**
+   * See code related to Drupal\Driver\Cores\CoreInterface.
+   */
+  protected function expandEntityFields($entity_type, \stdClass $entity) {
+    $field_types = $this->getEntityFieldTypes($entity_type);
+    foreach ($field_types as $field_name => $type) {
+      if (isset($entity->$field_name)) {
+        $entity->$field_name = $this->getFieldHandler($entity, $entity_type, $field_name)
+          ->expand($entity->$field_name);
+      }
+    }
+  }
+
+  /**
+   * See code related to Drupal\Driver\Cores\CoreInterface.
+   */
+  public function getEntityFieldTypes($entity_type) {
+    $return = array();
+    $fields = \Drupal::entityManager()->getFieldStorageDefinitions($entity_type);
+    foreach ($fields as $field_name => $field) {
+      if ($this->isField($entity_type, $field_name)) {
+        $return[$field_name] = $field->getType();
+      }
+    }
+    return $return;
+  }
+
+  /**
+   * See code related to Drupal\Driver\Cores\CoreInterface.
+   */
+  public function getFieldHandler($entity, $entity_type, $field_name) {
+    $reflection = new \ReflectionClass($this);
+    $core_namespace = $reflection->getShortName();
+    $field_types = $this->getEntityFieldTypes($entity_type);
+    $camelized_type = Container::camelize($field_types[$field_name]);
+    $default_class = sprintf('\Drupal\Driver\Fields\%s\DefaultHandler', $core_namespace);
+    $class_name = sprintf('\Drupal\Driver\Fields\%s\%sHandler', $core_namespace, $camelized_type);
+    if (class_exists($class_name)) {
+      return new $class_name($entity, $entity_type, $field_name);
+    }
+    return new $default_class($entity, $entity_type, $field_name);
+  }
+
+  /**
+   * See code related to Drupal\Driver\Cores\CoreInterface.
+   */
+  public function isField($entity_type, $field_name) {
+    $fields = \Drupal::entityManager()->getFieldStorageDefinitions($entity_type);
+    return (isset($fields[$field_name]) && $fields[$field_name] instanceof FieldStorageConfig);
+  }
 }
