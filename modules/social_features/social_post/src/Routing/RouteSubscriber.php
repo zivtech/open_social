@@ -22,6 +22,9 @@ class RouteSubscriber extends RouteSubscriberBase {
         'pid' => NULL,
       ));
     }
+    if ($route = $collection->get('entity.post.edit_form')) {
+      $route->setOption('_admin_route', FALSE);
+    }
   }
 
 }
