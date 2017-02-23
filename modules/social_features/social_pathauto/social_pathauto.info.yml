@@ -1,0 +1,7 @@
+name: 'Social Pathauto'
+description: 'Provides a mechanism automatically generate aliases for the content.'
+type: module
+core: 8.x
+dependencies:
+  - pathauto
+package: Social
