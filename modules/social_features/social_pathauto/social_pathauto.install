@@ -1,0 +1,72 @@
+<?php
+
+/**
+ * @file
+ * Install, update, and uninstall functions for Social Pathauto.
+ */
+
+use Drupal\pathauto\Entity\PathautoPattern;
+use Drupal\pathauto\PathautoState;
+
+/**
+ * Install
+ * Prepare and create all the patterns for:
+ *   - Events
+ *   - Topics
+ *   - Basic page
+ *   - Book page
+ */
+function social_pathauto_install() {
+  $content_types = ['event', 'topic', 'page', 'book'];
+
+  // Create pattern for each content type
+  foreach ($content_types as $content_type) {
+    $pattern = PathautoPattern::create([
+      'id' => $content_type . "_alias",
+      'label' => $content_type . " title",
+      'type' => "canonical_entities:node",
+      'pattern' => "/" . $content_type . "/[node:title]",
+      'selection_criteria' => [
+        [
+          'id' => 'node_type',
+          'bundles' => [
+            $content_type => $content_type
+          ],
+          "negate" => false,
+        ]
+      ],
+    ]);
+
+    // Save the pattern
+    $pattern->save();
+  }
+
+  // Create pattern for Group
+  $pattern = PathautoPattern::create([
+    'id' => "open_group_alias",
+    'label' => "group title",
+    'type' => "canonical_entities:group",
+    'pattern' => "/group/[group:title]/stream",
+    'selection_criteria' => [
+      [
+        'id' => 'entity_bundle:group',
+        'bundles' => [
+          'open_group' => 'open_group'
+        ],
+        "negate" => false,
+      ]
+    ],
+  ]);
+
+  // Save the pattern
+  $pattern->save();
+}
+
+/**
+ * Update all the entity aliases
+ */
+function social_pathauto_update_8001() {
+  $entity = NULL;
+  $entity->path->pathauto = PathautoState::CREATE;
+  \Drupal::service('pathauto.generator')->updateEntityAlias($entity, 'bulkupdate', array('message' => TRUE));
+}
