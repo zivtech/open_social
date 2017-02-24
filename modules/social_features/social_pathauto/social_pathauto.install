@@ -6,7 +6,6 @@
  */
 
 use Drupal\pathauto\Entity\PathautoPattern;
-use Drupal\pathauto\PathautoState;
 
 /**
  * Install
@@ -60,13 +59,4 @@ function social_pathauto_install() {
 
   // Save the pattern
   $pattern->save();
-}
-
-/**
- * Update all the entity aliases
- */
-function social_pathauto_update_8001() {
-  $entity = NULL;
-  $entity->path->pathauto = PathautoState::CREATE;
-  \Drupal::service('pathauto.generator')->updateEntityAlias($entity, 'bulkupdate', array('message' => TRUE));
 }
