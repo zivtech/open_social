@@ -57,12 +57,11 @@ function social_pathauto_install() {
   // Save the pattern
   $pattern->save();
 
-
-  // TODO: put this in a update hook?
   foreach ($content_types as $content_type) {
 
     $query_node_types = \Drupal::entityQuery('node')
       ->condition('type', $content_type)
+      ->addMetaData('account', user_load(1))
       ->execute();
     $nodes = \Drupal::service('entity.manager')
       ->getStorage('node')
@@ -72,31 +71,7 @@ function social_pathauto_install() {
       \Drupal::service('pathauto.generator')
         // NOTE: 'insert' CREATES new aliases
         // even if there are already aliases set.
-        ->updateEntityAlias($node, 'update');
+        ->updateEntityAlias($node, 'bulkupdate');
     }
   }
 }
-
-///**
-// * Update all nodes with aliases
-// */
-//function social_pathauto_update_8001() {
-//  $content_types = ['event', 'topic'];
-//
-//  foreach ($content_types as $content_type) {
-//
-//    $query_node_types = \Drupal::entityQuery('node')
-//      ->condition('type', $content_type)
-//      ->execute();
-//    $nodes = \Drupal::service('entity.manager')
-//      ->getStorage('node')
-//      ->loadMultiple($query_node_types);
-//
-//    foreach ($nodes as $node) {
-//      \Drupal::service('pathauto.generator')
-//        // NOTE: 'insert' CREATES new aliases
-//        // even if there are already aliases set.
-//        ->updateEntityAlias($node, 'update');
-//    }
-//  }
-//}
