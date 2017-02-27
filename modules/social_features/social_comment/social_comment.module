@@ -11,6 +11,7 @@ use Drupal\Core\Link;
 use Drupal\Core\Session\AccountInterface;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\comment\CommentInterface;
+use Drupal\comment\CommentStorageInterface;
 use Drupal\group\Entity\GroupContent;
 use Drupal\Core\Entity\Display\EntityViewDisplayInterface;
 
@@ -51,9 +52,18 @@ function social_comment_form_comment_form_alter(&$form, FormStateInterface $form
  * Implements hook_ENTITY_TYPE_presave().
  */
 function social_comment_comment_presave(Drupal\Core\Entity\EntityInterface $entity) {
-  dpm($entity->getParentComment()->getParentComment()->id());
-  $entity->pid[] = '30';
-  dpm($entity);
+
+  // Storage manager interface for reply on a reply.
+  if (!empty($entity->getParentComment()->getParentComment())) {
+    $parent_entity = $entity->getParentComment()->getParentComment();
+
+    $max_thread = \Drupal::entityTypeManager()->getStorage('comment')->getMaxThread($parent_entity);
+
+    \Drupal::logger('max_thread')->notice($max_thread);
+
+    $entity->pid = $parent_entity->id();
+    $entity->thread = $max_thread;
+  }
 }
 
 /**

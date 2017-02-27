@@ -129,6 +129,19 @@ function social_mentions_comment_links_alter(array &$links, CommentInterface $en
       return;
     }
 
+    $commented_entity = $entity->getCommentedEntity();
+    if (is_object($commented_entity)) {
+      $commented_entity_type = $commented_entity->getEntityTypeId();
+
+      // Prepare the "Show all comments" link.
+      if ($commented_entity_type === 'post') {
+        $comment_field_name = 'field_post_comments';
+      }
+      elseif ($commented_entity_type === 'node') {
+        $comment_field_name = 'field_' . $commented_entity->bundle() . '_comments';
+      }
+    }
+
     // Url::fromUserInput('#' . $entity->getParentComment()->id()),
 
     if(\Drupal::routeMatch()->getRouteName() === 'comment.reply') {
@@ -137,7 +150,7 @@ function social_mentions_comment_links_alter(array &$links, CommentInterface $en
       $currentNode = Drupal::routeMatch()->getParameter('node')->id();
       $links['comment']['#links']['comment-reply'] = [
         'title' => t('Reply'),
-        'url' => Url::fromUri('internal:/comment/reply/node/' . $currentNode . '/field_topic_comments/' . $entity->id()),
+        'url' => Url::fromUri('internal:/comment/reply/node/' . $currentNode . '/' . $comment_field_name .  '/' . $entity->id()),
 //      'attributes' => [
 //        'class' => ['mention-reply'],
 //        'data-author' => 'frank',
