@@ -129,14 +129,21 @@ function social_mentions_comment_links_alter(array &$links, CommentInterface $en
       return;
     }
 
-    $links['comment']['#links']['comment-reply'] = [
-      'title' => t('Reply'),
-      'url' => Url::fromUserInput('#' . $entity->getParentComment()->id()),
-      'attributes' => [
-        'class' => ['mention-reply'],
-        'data-author' => Json::encode($item),
-      ],
-    ];
+    // Url::fromUserInput('#' . $entity->getParentComment()->id()),
+
+    if(\Drupal::routeMatch()->getRouteName() === 'comment.reply') {
+      unset($links['comment']['#links']['comment-reply']);
+    } else {
+      $currentNode = Drupal::routeMatch()->getParameter('node')->id();
+      $links['comment']['#links']['comment-reply'] = [
+        'title' => t('Reply'),
+        'url' => Url::fromUri('internal:/comment/reply/node/' . $currentNode . '/field_topic_comments/' . $entity->id()),
+//      'attributes' => [
+//        'class' => ['mention-reply'],
+//        'data-author' => 'frank',
+//      ],
+      ];
+    }
   }
 }
 

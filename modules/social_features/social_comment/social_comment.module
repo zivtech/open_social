@@ -48,6 +48,15 @@ function social_comment_form_comment_form_alter(&$form, FormStateInterface $form
 }
 
 /**
+ * Implements hook_ENTITY_TYPE_presave().
+ */
+function social_comment_comment_presave(Drupal\Core\Entity\EntityInterface $entity) {
+  dpm($entity->getParentComment()->getParentComment()->id());
+  $entity->pid[] = '30';
+  dpm($entity);
+}
+
+/**
  * Form validation handler for comment_form().
  *
  * Validate replies to comments deeper than 1.
@@ -61,7 +70,7 @@ function social_comment_form_reply_validate($form, FormStateInterface $form_stat
     switch ($bundle) {
       default:
         if (!empty($comment->getParentComment())) {
-          $form_state->setErrorByName('', t('Replies to comments deeper than 1 is not allowed'));
+          //$form_state->setErrorByName('', t('Replies to comments deeper than 1 is not allowed'));
         }
         break;
 
