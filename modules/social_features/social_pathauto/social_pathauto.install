@@ -9,20 +9,17 @@ use Drupal\pathauto\Entity\PathautoPattern;
 
 /**
  * Install
- * Prepare and create all the patterns for:
- *   - Events
- *   - Topics
- *   - Basic page
- *   - Book page
+ * Prepare and create all the patterns for the content types and group
  */
 function social_pathauto_install() {
-  $content_types = ['event', 'topic', 'page', 'book'];
+
+  $content_types = ['event', 'topic', 'page'];
 
   // Create pattern for each content type
   foreach ($content_types as $content_type) {
     $pattern = PathautoPattern::create([
       'id' => $content_type . "_alias",
-      'label' => $content_type . " title",
+      'label' => $content_type . " alias",
       'type' => "canonical_entities:node",
       'pattern' => "/" . $content_type . "/[node:title]",
       'selection_criteria' => [
@@ -36,14 +33,14 @@ function social_pathauto_install() {
       ],
     ]);
 
-    // Save the pattern
+    // Save the patterns
     $pattern->save();
   }
 
   // Create pattern for Group
   $pattern = PathautoPattern::create([
     'id' => "open_group_alias",
-    'label' => "group title",
+    'label' => "group alias",
     'type' => "canonical_entities:group",
     'pattern' => "/group/[group:title]/stream",
     'selection_criteria' => [
@@ -59,4 +56,47 @@ function social_pathauto_install() {
 
   // Save the pattern
   $pattern->save();
+
+
+  // TODO: put this in a update hook?
+  foreach ($content_types as $content_type) {
+
+    $query_node_types = \Drupal::entityQuery('node')
+      ->condition('type', $content_type)
+      ->execute();
+    $nodes = \Drupal::service('entity.manager')
+      ->getStorage('node')
+      ->loadMultiple($query_node_types);
+
+    foreach ($nodes as $node) {
+      \Drupal::service('pathauto.generator')
+        // NOTE: 'insert' CREATES new aliases
+        // even if there are already aliases set.
+        ->updateEntityAlias($node, 'update');
+    }
+  }
 }
+
+///**
+// * Update all nodes with aliases
+// */
+//function social_pathauto_update_8001() {
+//  $content_types = ['event', 'topic'];
+//
+//  foreach ($content_types as $content_type) {
+//
+//    $query_node_types = \Drupal::entityQuery('node')
+//      ->condition('type', $content_type)
+//      ->execute();
+//    $nodes = \Drupal::service('entity.manager')
+//      ->getStorage('node')
+//      ->loadMultiple($query_node_types);
+//
+//    foreach ($nodes as $node) {
+//      \Drupal::service('pathauto.generator')
+//        // NOTE: 'insert' CREATES new aliases
+//        // even if there are already aliases set.
+//        ->updateEntityAlias($node, 'update');
+//    }
+//  }
+//}
