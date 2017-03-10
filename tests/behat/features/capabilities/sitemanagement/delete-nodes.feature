@@ -4,7 +4,7 @@ Feature: Delete Nodes
   Role: As a SM
   Goal/desire: I want to delete posts and comments on the platform
 
-  @test1
+  @delete-post
   Scenario: Successfully delete comment and post
     Given users:
       | name     | mail               | status | field_profile_first_name | field_profile_last_name |
