@@ -23,8 +23,6 @@ Feature: Delete Nodes
     And I am on the homepage
     Then I should see "This is a post by Albert Einstein for Isaac Newton."
     When I click the xth "5" element with the css ".dropdown-toggle"
-    And I break
     And I should see the link "Delete"
     Then I click "Delete"
-    And I break
     And I click "Delete"
