@@ -29,6 +29,7 @@ projects[flag][download][revision] = 85f84c17cd4c3f822a2b07dff5cc50b77b0dda25
 projects[flag][download][branch] = 8.x-4.x
 projects[group][type] = module
 projects[group][version] = 1.0-beta5
+projects[group][patch][] = "https://www.drupal.org/files/issues/request_membership-2752603-29.patch"
 projects[image_widget_crop][type] = module
 projects[image_widget_crop][version] = 1.5
 projects[libraries][type] = module
