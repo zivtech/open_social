@@ -73,6 +73,17 @@ class SocialMinkContext extends MinkContext{
     }
   }
 
+  /**
+   * @Given /^I fill hidden field "([^"]*)" with "([^"]*)"$/
+   */
+  public function iFillHiddenFieldWith($field, $value)
+  {
+    $field = $this->fixStepArgument($field);
+
+    $javascript = "jQuery('input[name=\"".$field."\"]').val(" . $value . ")";
+    $this->getSession()->executeScript($javascript);
+  }
+
 
   /**
    * Attaches file to field with specified name.
@@ -82,7 +93,7 @@ class SocialMinkContext extends MinkContext{
   public function attachFileToHiddenField($field, $path) {
     $field = $this->fixStepArgument($field);
 
-    $javascript = "jQuery('#".$field."').parent().removeClass('hidden')";
+    $javascript = "jQuery('#".$field."').parent('.hidden').removeClass('hidden')";
     $this->getSession()->executeScript($javascript);
 
     $this->attachFileToField($field, $path);

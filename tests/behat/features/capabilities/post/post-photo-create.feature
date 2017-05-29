@@ -10,15 +10,19 @@ Feature: Create Post with Photo
       | PostPhotoCreate1 |      1 | PostPhotoCreate1 |
     And I am logged in as "PostPhotoCreate1"
     And I am on the homepage
-    And I should not see "PostPhotoCreate1" in the "Main content front"
+    #And I should not see "PostPhotoCreate1" in the "Main content front"
 
-   When I attach the file "/files/opensocial.jpg" to hidden field "edit-field-post-image-0-upload"
+   When I attach the file "opensocial.jpg" to hidden field "edit-field-post-image-0-upload"
     And I wait for AJAX to finish
+    And I fill hidden field "field_post_image[0][width]" with "3840"
+    And I fill hidden field "field_post_image[0][height]" with "2160"
+    And I fill hidden field "field_post_image[0][display]" with "1"
 
     When I fill in "Say something about this photo" with "This post with a photo."
     And I select post visibility "Public"
     And I press "Post"
    Then I should see the success message "Your post has been posted."
+    And I break
     And I should see "This post with a photo."
     And I should see "PostPhotoCreate1" in the "Main content front"
     And I should be on "/stream"
