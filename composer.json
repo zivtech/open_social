@@ -24,7 +24,8 @@
             },
             "drupal/core": {
                 "Clean up user input for exposed checkboxes": "https://www.drupal.org/files/issues/2687773-18-Cleanup-user-input-for-checkboxes-8.2.patch",
-                "Color module html preview optional": "https://www.drupal.org/files/issues/color-optional-html-preview-2844190-2.patch"
+                "Color module html preview optional": "https://www.drupal.org/files/issues/color-optional-html-preview-2844190-2.patch",
+                "Refreshless core patch": "https://www.drupal.org/files/issues/refreshless-alpha3-core-patch-2695717-7.patch"
             },
             "drupal/like_and_dislike": {
                 "Fix preview on node": "https://www.drupal.org/files/issues/2848080-2-preview-fails-on-node.patch"
@@ -55,6 +56,7 @@
         "drupal/override_node_options": "2.0",
         "drupal/profile": "1.0-alpha5",
         "drupal/r4032login": "1.x-dev#4b2077aa70e3f7b00b8a9cba25af5b948ba2e3b9",
+        "drupal/refreshless": "1.0-alpha3",
         "drupal/search_api": "1.0",
         "drupal/token": "1.0",
         "drupal/votingapi": "3.0-alpha2",
