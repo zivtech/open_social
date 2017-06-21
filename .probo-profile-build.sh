@@ -3,7 +3,7 @@
 # This script is to be used with Probo CI (http://probo.ci/) and the development process of the Open Social Drupal install profile.
 # It is meant to enable building Open Social from a git branch
 
-PROFILE_NAME='open_social'
+PROFILE_NAME='social'
 MAKE_FILE=''
 SRC_DIR='/src'
 DESTINATION='/var/www/html'
