@@ -7,10 +7,10 @@ steps:
   - name: Run the profile script
     command: './$SRC_DIR/.probo-profile-build.sh'
   - name: Run install
-    command: "drush site-install --root=/var/www/html open_social --db-url='mysqli://root:strongpassword@localhost/open_social'"
+    command: "drush site-install --root=/var/www/html social --db-url='mysqli://root:strongpassword@localhost/social'"
   - name: Set file directory permissions
     command: 'chown -R www-data:www-data /var/www/html/sites/default/files'
   - name: Rebuild caches
     command: 'drush cr'
   - name: Run behat tests
-    command: 'cd /var/www/html/profiles/open_social/tests ; composer install ; ./bin/behat --profile probo'
+    command: 'cd /var/www/html/profiles/social/tests ; composer install ; ./bin/behat --profile probo'
