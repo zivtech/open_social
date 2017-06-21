@@ -1,13 +1,15 @@
 
 steps:
   - name: Update Composer
-    command: '/usr/local/bin/composer self-update'
+    command: '/usr/local/bin/composer self-update
+  - name: Get proper drush version
+    command: 'composer global require drush/drush:dev-master ; cd /usr/local/bin ; mv drush drush7 ; ln -s $HOME/.composer/vendor/bin/drush drush'
   - name: Install drush-master for d8
     command: 'composer global require drush/drush:8.* ; cd /usr/local/bin ; mv drush drush7 ; ln -s $HOME/.composer/vendor/bin/drush drush'
   - name: Run the profile script
-    command: '/.probo-profile-build.sh'
+    command: './$SRC_DIR/.probo-profile-build.sh'
   - name: Run install
-    command: "drush site-install --root=/var/www/html social --db-url='mysqli://root:strongpassword@localhost/social'"
+    command: "drush -y site-install --root=/var/www/html social --db-url='mysqli://root:root@db:3306/social'"
   - name: Set file directory permissions
     command: 'chown -R www-data:www-data /var/www/html/sites/default/files'
   - name: Rebuild caches
